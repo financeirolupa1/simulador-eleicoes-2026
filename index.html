@@ -9,7 +9,7 @@
 <meta property="og:type" content="website">
 <meta property="og:title" content="Simulador Eleições 2026 · Piauí">
 <meta property="og:description" content="Monte seu cenário de votação e descubra quem ficaria com as 10 vagas do Piauí na Câmara Federal.">
-<meta property="og:image" content="lupa1-logo.png">
+<meta property="og:url" content="https://lupa1eleicoes2026.com.br/">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
@@ -60,7 +60,7 @@
     height:34px;width:34px;border-radius:8px;overflow:hidden;
     background:#fff;flex:none;display:flex;align-items:center;justify-content:center;
   }
-  .topbar .mark img{height:100%;width:100%;object-fit:cover;}
+  .topbar .mark svg{height:30px;width:30px;}
   .topbar .brandtext{
     font-family:'Oswald',sans-serif;
     font-weight:600;
@@ -576,7 +576,16 @@
 <body>
 
   <div class="topbar">
-    <div class="mark"><img src="lupa1-logo.png" alt="Lupa1"></div>
+    <div class="mark" aria-label="Lupa1">
+      <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="36" cy="26" r="20" fill="#29569F"/>
+        <path d="M36 10 A16 16 0 0 1 50 34 L36 26 Z" fill="#49AD4A"/>
+        <path d="M36 42 A16 16 0 0 1 22 18 L36 26 Z" fill="#49AD4A"/>
+        <path d="M50 34 A16 16 0 0 1 22 18" fill="#49AD4A"/>
+        <text x="36" y="34" font-family="Oswald, sans-serif" font-size="22" font-weight="700" fill="#fff" text-anchor="middle">1</text>
+        <rect x="14" y="40" width="7" height="18" rx="3.5" transform="rotate(45 17.5 49)" fill="#29569F"/>
+      </svg>
+    </div>
     <div class="brandtext">LUPA<b>1</b> &nbsp;ELEIÇÃO 2026</div>
     <div class="divider"></div>
     <div class="subtitle">Simulador de apuração &mdash; Piauí, Deputado Federal</div>
