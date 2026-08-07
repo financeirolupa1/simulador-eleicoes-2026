@@ -221,52 +221,50 @@
   }
   .btn-login:hover{filter:brightness(1.12);}
 
-  /* ===== Scenario bar (Firestore) ===== */
-  .scenario-bar{
-    background:var(--panel);border-bottom:1px solid var(--border);
-    padding:10px 20px;
+  /* ===== Saldo de votos (outros partidos) ===== */
+  .saldo-box{
+    margin-top:14px;
+    background:var(--panel);border:1px solid var(--border);border-radius:12px;
+    padding:14px 16px;
   }
-  .scenario-inner{
-    max-width:1400px;margin:0 auto;
-    display:flex;align-items:center;gap:10px;flex-wrap:wrap;
+  .saldo-head{display:flex;align-items:center;gap:9px;margin-bottom:10px;}
+  .saldo-title{
+    font-family:'Oswald',sans-serif;font-size:13px;font-weight:600;
+    text-transform:uppercase;letter-spacing:.05em;color:var(--ink);
   }
-  .sb-label{
-    font-family:'Oswald',sans-serif;font-size:11.5px;font-weight:600;
-    text-transform:uppercase;letter-spacing:.08em;color:var(--muted);flex:none;
+  .saldo-badge{
+    font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:.1em;
+    background:rgba(73,173,74,.18);color:var(--green-bright);
+    padding:2px 7px;border-radius:5px;
   }
-  #scenarioName{
-    flex:1;min-width:150px;
+  .saldo-row{display:flex;align-items:flex-start;gap:12px;flex-wrap:wrap;}
+  #inputOutros{
+    flex:none;width:130px;
     background:var(--panel-alt);border:1px solid var(--border);color:var(--ink);
-    font-family:'Inter',sans-serif;font-size:13px;
-    border-radius:7px;padding:8px 11px;
+    font-family:'JetBrains Mono',monospace;font-size:16px;font-weight:600;
+    border-radius:7px;padding:9px 10px;text-align:right;
   }
-  #scenarioName:focus{outline:2px solid var(--blue);outline-offset:1px;}
-  #scenarioList{
-    flex:0 1 220px;min-width:0;
-    background:var(--panel-alt);border:1px solid var(--border);color:var(--ink);
-    font-family:'Inter',sans-serif;font-size:12.5px;
-    border-radius:7px;padding:8px 10px;cursor:pointer;
+  #inputOutros:focus{outline:2px solid var(--blue);outline-offset:1px;}
+  .saldo-hint{flex:1;min-width:180px;font-size:11.5px;color:var(--muted-dim);line-height:1.5;}
+  .saldo-bar{
+    height:8px;border-radius:5px;background:var(--panel-alt);
+    border:1px solid var(--border);overflow:hidden;margin-top:13px;
   }
-  .btn-save{
-    background:var(--green);border:none;color:#08130A;
-    font-family:'Inter',sans-serif;font-size:12.5px;font-weight:700;
-    padding:8px 16px;border-radius:7px;cursor:pointer;flex:none;
-    transition:filter .15s;
+  .saldo-fill{
+    height:100%;width:0%;
+    background:linear-gradient(90deg, var(--blue), var(--green));
+    transition:width .35s ease;
   }
-  .btn-save:hover{filter:brightness(1.1);}
-  .btn-save:disabled{opacity:.6;cursor:wait;}
-  .sb-status{
-    font-size:11.5px;color:var(--muted);flex:1 1 100%;min-width:0;
-    font-family:'JetBrains Mono',monospace;
+  .saldo-legend{
+    display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;
+    font-family:'JetBrains Mono',monospace;font-size:10.5px;color:var(--muted);
+    margin-top:7px;
   }
-  .sb-status.ok{color:var(--green-bright);}
-  .sb-status.err{color:#FF7A70;}
+  .saldo-legend b{color:var(--ink);}
+  .saldo-legend .esgotado{color:var(--gold);}
   @media (max-width:520px){
-    .scenario-bar{padding:9px 12px;}
-    .scenario-inner{gap:7px;}
-    #scenarioName{flex:1 1 100%;}
-    #scenarioList{flex:1 1 100%;}
-    .btn-save,#btnDelete{flex:1;}
+    #inputOutros{width:100%;}
+    .saldo-hint{min-width:0;}
   }
 
   /* ===== Final result panel (signature scoreboard) ===== */
@@ -407,6 +405,22 @@
   .btn-ghost:hover{border-color:var(--blue);color:var(--ink);}
 
   .heading-actions{display:flex;align-items:center;gap:12px;}
+
+  /* Botão de PDF no rodapé da coluna: só no celular, onde a leitura é de cima para baixo */
+  .btn-pdf-bottom{
+    display:none;
+    width:100%;margin-top:4px;padding:15px;
+    background:var(--blue);border:1px solid var(--blue-bright);color:#fff;
+    font-family:'Inter',sans-serif;font-size:15px;font-weight:700;
+    border-radius:10px;cursor:pointer;
+    transition:filter .15s, transform .1s;
+  }
+  .btn-pdf-bottom:active{transform:scale(.985);}
+  .btn-pdf-bottom:disabled{opacity:.6;cursor:wait;}
+  @media (max-width:520px){
+    .btn-pdf-bottom{display:block;}
+    .heading-actions .btn-pdf{display:none;}
+  }
   .btn-pdf{
     background:var(--blue);border:1px solid var(--blue-bright);color:#fff;
     font-family:'Inter',sans-serif;font-size:12px;font-weight:700;
@@ -592,17 +606,6 @@
     <div class="live-badge"><span class="live-dot"></span>SIMULAÇÃO</div>
   </div>
 
-  <div class="scenario-bar">
-    <div class="scenario-inner">
-      <span class="sb-label">Cenário</span>
-      <input type="text" id="scenarioName" placeholder="Nome do cenário (ex: Cenário base agosto)" autocomplete="off">
-      <button class="btn-save" id="btnSave">Salvar</button>
-      <select id="scenarioList"><option value="">Abrir cenário salvo...</option></select>
-      <button class="btn-ghost" id="btnDelete" title="Excluir o cenário aberto">Excluir</button>
-      <span class="sb-status" id="sbStatus"></span>
-    </div>
-  </div>
-
   <div class="hero">
     <div class="hero-inner">
       <div class="eyebrow">
@@ -628,11 +631,6 @@
         <div class="stat-card editable">
           <label>Vagas em disputa</label>
           <input type="number" id="inputVagas" value="10" min="1" max="99">
-        </div>
-        <div class="stat-card editable">
-          <label>Votos de outros partidos (fora da simulação) <span id="autoBadge" style="color:var(--green-bright);font-weight:700;">· AUTO</span></label>
-          <input type="number" id="inputOutros" value="0" min="0">
-          <div class="hint">Ajustado automaticamente: é o saldo do total estimado menos tudo que você já digitou. Se editar à mão, o automático desliga.</div>
         </div>
       </div>
 
@@ -678,6 +676,19 @@
         <button class="btn-ghost" id="btnClear">Zerar votação</button>
       </div>
       <div class="input-scroll" id="inputScroll"></div>
+
+      <div class="saldo-box">
+        <div class="saldo-head">
+          <span class="saldo-title">Votos de outros partidos</span>
+          <span class="saldo-badge" id="autoBadge">AUTO</span>
+        </div>
+        <div class="saldo-row">
+          <input type="number" id="inputOutros" value="0" min="0">
+          <div class="saldo-hint">Saldo que falta para bater o total estimado de votos válidos do estado. Cai sozinho conforme você preenche a votação acima. Se editar à mão, o automático desliga.</div>
+        </div>
+        <div class="saldo-bar"><div class="saldo-fill" id="saldoFill"></div></div>
+        <div class="saldo-legend" id="saldoLegend"></div>
+      </div>
     </div>
 
     <div class="col-results">
@@ -713,6 +724,8 @@
         <h2>Deputados eleitos</h2>
       </div>
       <div class="result-panel" id="electedPanel"></div>
+
+      <button class="btn-pdf-bottom" id="btnPdfBottom">Gerar PDF da simulação</button>
     </div>
   </div>
 
@@ -907,6 +920,7 @@ document.getElementById('inputOutros').addEventListener('input', (e)=>{
   autoOutros = false; // usuário assumiu o controle manual
   const badge = document.getElementById('autoBadge');
   if(badge) badge.style.display = 'none';
+  atualizarSaldo(estimadoTotal(), totalDigitado());
   recalc();
 });
 
@@ -922,15 +936,38 @@ function estimadoTotal(){
 
 // Recalcula "outros" como o SALDO do total estimado menos tudo que já foi digitado.
 // Sem isso, os votos digitados eram somados por cima do total e inflavam o QE.
+function totalDigitado(){
+  return CANDIDATES.reduce((s,c)=>s+(state.votes[c.id]||0),0)
+    + PARTIES.reduce((s,p)=>s+(state.legenda[p]||0)+(state.restante[p]||0),0);
+}
+
 function syncOutros(){
   const estimado = estimadoTotal();
   document.getElementById('statEstimado').textContent = fmt(estimado);
-  if(!autoOutros) return;
-  const digitado = CANDIDATES.reduce((s,c)=>s+(state.votes[c.id]||0),0)
-    + PARTIES.reduce((s,p)=>s+(state.legenda[p]||0)+(state.restante[p]||0),0);
-  const outros = Math.max(0, Math.round(estimado - digitado));
-  state.outros = outros;
-  document.getElementById('inputOutros').value = outros;
+  const digitado = totalDigitado();
+  if(autoOutros){
+    const outros = Math.max(0, Math.round(estimado - digitado));
+    state.outros = outros;
+    document.getElementById('inputOutros').value = outros;
+  }
+  atualizarSaldo(estimado, digitado);
+}
+
+// Barra de saldo: mostra quanto do total estimado do estado já foi distribuído
+function atualizarSaldo(estimado, digitado){
+  const fill = document.getElementById('saldoFill');
+  const legend = document.getElementById('saldoLegend');
+  if(!fill || !legend) return;
+  const pct = estimado > 0 ? Math.min(100, (digitado / estimado) * 100) : 0;
+  fill.style.width = pct.toFixed(1) + '%';
+  const restante = Math.max(0, Math.round(estimado - digitado));
+  if(autoOutros && digitado > estimado){
+    legend.innerHTML = `<span class="esgotado">Você já passou do total estimado em ${fmt(digitado-estimado)} votos</span>`
+      + `<span>preenchido <b>${fmt(digitado)}</b></span>`;
+  } else {
+    legend.innerHTML = `<span>preenchido <b>${fmt(digitado)}</b> de ${fmt(estimado)}</span>`
+      + `<span>${autoOutros ? 'restam <b>'+fmt(restante)+'</b> para outros partidos' : 'ajuste manual ativo'}</span>`;
+  }
 }
 
 function applyEstimate(){
@@ -1188,138 +1225,8 @@ function recalc(){
 
 recalc();
 
-/* ---------- Cenários salvos no navegador do visitante ----------
-   Versão pública: cada pessoa guarda os próprios cenários localmente.
-   Nada é enviado para servidor algum. ------------------------------ */
-const STORE_KEY = 'simulador-eleicoes-2026';
-let cenarioAtualId = null;
-
-function status(msg, tipo){
-  const el = document.getElementById('sbStatus');
-  el.textContent = msg;
-  el.className = 'sb-status' + (tipo ? ' '+tipo : '');
-}
-
-function lerBase(){
-  try{ return JSON.parse(localStorage.getItem(STORE_KEY) || '{}'); }
-  catch(e){ return {}; }
-}
-function gravarBase(base){
-  localStorage.setItem(STORE_KEY, JSON.stringify(base));
-}
-
-function coletarEstado(){
-  return {
-    nome: document.getElementById('scenarioName').value.trim(),
-    votes: {...state.votes},
-    legenda: {...state.legenda},
-    restante: {...state.restante},
-    vagas: state.vagas,
-    outros: state.outros,
-    autoOutros: autoOutros,
-    comparecimento: document.getElementById('inputComparecimento').value,
-    validosPct: document.getElementById('inputValidosPct').value,
-    candidatos: CANDIDATES.map(c=>({id:c.id, name:c.name, party:c.party, bloco:c.bloco})),
-    atualizadoEm: new Date().toISOString()
-  };
-}
-
-function aplicarEstado(d){
-  const porNome = {};
-  if(d.candidatos){ d.candidatos.forEach(c=>{ porNome[c.name] = d.votes[c.id]; }); }
-  CANDIDATES.forEach(c=>{
-    let v = 0;
-    if(porNome[c.name] !== undefined) v = porNome[c.name] || 0;
-    else if(d.votes && d.votes[c.id] !== undefined) v = d.votes[c.id] || 0;
-    state.votes[c.id] = v;
-  });
-  PARTIES.forEach(p=>{
-    state.legenda[p] = (d.legenda && d.legenda[p]) || 0;
-    state.restante[p] = (d.restante && d.restante[p]) || 0;
-  });
-  state.vagas = d.vagas || 10;
-  autoOutros = d.autoOutros !== false;
-
-  document.getElementById('inputVagas').value = state.vagas;
-  if(d.comparecimento) document.getElementById('inputComparecimento').value = d.comparecimento;
-  if(d.validosPct) document.getElementById('inputValidosPct').value = d.validosPct;
-  document.getElementById('scenarioName').value = d.nome || '';
-
-  document.querySelectorAll('input[data-cid]').forEach(i=>{ i.value = state.votes[i.dataset.cid] || 0; });
-  document.querySelectorAll('input[data-legenda]').forEach(i=>{ i.value = state.legenda[i.dataset.legenda] || 0; });
-  document.querySelectorAll('input[data-restante]').forEach(i=>{ i.value = state.restante[i.dataset.restante] || 0; });
-
-  const badge = document.getElementById('autoBadge');
-  if(autoOutros){
-    if(badge) badge.style.display = '';
-    syncOutros();
-  } else {
-    state.outros = d.outros || 0;
-    document.getElementById('inputOutros').value = state.outros;
-    if(badge) badge.style.display = 'none';
-    document.getElementById('statEstimado').textContent = fmt(estimadoTotal());
-  }
-  recalc();
-}
-
-function listarCenarios(){
-  const base = lerBase();
-  const sel = document.getElementById('scenarioList');
-  sel.innerHTML = '<option value="">Abrir cenário salvo...</option>';
-  Object.entries(base)
-    .sort((a,b)=> (b[1].atualizadoEm||'').localeCompare(a[1].atualizadoEm||''))
-    .forEach(([id,d])=>{
-      const opt = document.createElement('option');
-      opt.value = id;
-      const quando = d.atualizadoEm ? new Date(d.atualizadoEm).toLocaleDateString('pt-BR') : '';
-      opt.textContent = (d.nome || '(sem nome)') + (quando ? ' · '+quando : '');
-      if(id === cenarioAtualId) opt.selected = true;
-      sel.appendChild(opt);
-    });
-}
-
-document.getElementById('btnSave').addEventListener('click', ()=>{
-  const nome = document.getElementById('scenarioName').value.trim();
-  if(!nome){ status('Dê um nome ao cenário antes de salvar.', 'err'); return; }
-  try{
-    const base = lerBase();
-    const id = cenarioAtualId || ('c' + Date.now());
-    base[id] = coletarEstado();
-    gravarBase(base);
-    cenarioAtualId = id;
-    status('Salvo neste navegador às ' + new Date().toLocaleTimeString('pt-BR'), 'ok');
-    listarCenarios();
-  }catch(err){ status('Erro ao salvar: ' + err.message, 'err'); }
-});
-
-document.getElementById('scenarioList').addEventListener('change', (e)=>{
-  const id = e.target.value;
-  if(!id){ cenarioAtualId = null; return; }
-  const base = lerBase();
-  if(!base[id]){ status('Cenário não encontrado.', 'err'); return; }
-  cenarioAtualId = id;
-  aplicarEstado(base[id]);
-  status('Cenário aberto.', 'ok');
-});
-
-document.getElementById('btnDelete').addEventListener('click', ()=>{
-  if(!cenarioAtualId){ status('Nenhum cenário salvo aberto.', 'err'); return; }
-  if(!confirm('Excluir este cenário deste navegador?')) return;
-  const base = lerBase();
-  delete base[cenarioAtualId];
-  gravarBase(base);
-  cenarioAtualId = null;
-  document.getElementById('scenarioName').value = '';
-  status('Cenário excluído.', 'ok');
-  listarCenarios();
-});
-
-listarCenarios();
-status('Os cenários que você salvar ficam guardados neste navegador.');
-
 /* ---------- PDF export ---------- */
-document.getElementById('btnPdf').addEventListener('click', ()=>{
-  const btn = document.getElementById('btnPdf');
+function gerarPDF(btn){
   const original = btn.textContent;
   btn.disabled = true; btn.textContent = 'Gerando...';
 
@@ -1506,7 +1413,10 @@ document.getElementById('btnPdf').addEventListener('click', ()=>{
   } finally {
     btn.disabled = false; btn.textContent = original;
   }
-});
+}
+
+document.getElementById('btnPdf').addEventListener('click', (e)=>gerarPDF(e.currentTarget));
+document.getElementById('btnPdfBottom').addEventListener('click', (e)=>gerarPDF(e.currentTarget));
 </script>
 </body>
 </html>
