@@ -61,6 +61,13 @@
     background:#fff;flex:none;display:flex;align-items:center;justify-content:center;
   }
   .topbar .mark svg{height:30px;width:30px;}
+  .home-link{
+    display:flex;align-items:center;gap:14px;flex:none;
+    text-decoration:none;color:inherit;
+    border-radius:8px;padding:2px 4px 2px 2px;
+    transition:opacity .15s;
+  }
+  .home-link:hover{opacity:.82;}
   .topbar .brandtext{
     font-family:'Oswald',sans-serif;
     font-weight:600;
@@ -585,11 +592,21 @@
     color:var(--muted-dim);font-size:11.5px;line-height:1.6;
   }
   .footnote b{color:var(--muted);}
+  .hit-counter{
+    display:flex;align-items:center;gap:6px;
+    justify-content:center;margin:18px auto 0;
+    font-family:'JetBrains Mono',monospace;
+    font-size:10.5px;color:var(--muted-dim);letter-spacing:.08em;
+    text-transform:uppercase;
+  }
+  .hit-counter #hitCount{color:var(--muted);font-weight:700;}
+  .hit-dot{width:5px;height:5px;border-radius:50%;background:var(--green);flex:none;opacity:.85;}
 </style>
 </head>
 <body>
 
   <div class="topbar">
+    <a class="home-link" href="index.html" title="Voltar à página inicial">
     <div class="mark" aria-label="Lupa1">
       <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
         <circle cx="36" cy="26" r="20" fill="#29569F"/>
@@ -601,6 +618,7 @@
       </svg>
     </div>
     <div class="brandtext">LUPA<b>1</b> &nbsp;ELEIÇÃO 2026</div>
+    </a>
     <div class="divider"></div>
     <div class="subtitle">Simulador de apuração &mdash; Piauí, Deputado Federal</div>
     <div class="live-badge"><span class="live-dot"></span>SIMULAÇÃO</div>
@@ -732,6 +750,37 @@
   <div class="footnote">
     <b>Como o cálculo funciona:</b> QE = votos válidos ÷ vagas (parte inteira). Cada partido recebe vagas diretas = votos do partido ÷ QE (parte inteira), desde que o partido tenha atingido o QE. As vagas restantes são distribuídas pelo método das médias (maiores médias / D'Hondt): a cada rodada, calcula-se votos ÷ (vagas atuais + 1) para os partidos elegíveis, e a maior média leva a vaga. Só disputa sobra o partido que atingiu o QE <b>e</b> tem ao menos um candidato com 10% do QE em votos. Dentro do partido, são eleitos os mais votados entre os que atingiram o piso individual de 10% do QE; abaixo disso, o candidato é listado como suplente. Cores de partido são apenas para diferenciação visual no simulador, não são as cores oficiais das legendas.
   </div>
+
+  <div class="hit-counter" id="hitCounter" hidden>
+    <span class="hit-dot"></span>
+    <span id="hitCount">&mdash;</span> acessos
+  </div>
+
+<script>
+(function(){
+  var CHAVE = 'lupa1eleicoes2026_federal';
+  var API = 'https://countapi.mileshilliard.com/api/v1/hit/' + CHAVE;
+  var el = document.getElementById('hitCounter');
+  var num = document.getElementById('hitCount');
+  function mostrar(v){
+    if(v === null || v === undefined) return;
+    num.textContent = Number(v).toLocaleString('pt-BR');
+    el.hidden = false;
+  }
+  var jaContou = null;
+  try{ jaContou = sessionStorage.getItem('contou_' + CHAVE); }catch(e){}
+  if(jaContou){ mostrar(jaContou); return; }
+  fetch(API)
+    .then(function(r){ return r.ok ? r.json() : null; })
+    .then(function(d){
+      if(d && typeof d.value !== 'undefined'){
+        try{ sessionStorage.setItem('contou_' + CHAVE, d.value); }catch(e){}
+        mostrar(d.value);
+      }
+    })
+    .catch(function(){});
+})();
+</script>
 
 <script>
 const CANDIDATES = [
