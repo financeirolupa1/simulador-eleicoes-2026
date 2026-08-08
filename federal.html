@@ -276,10 +276,29 @@
 
   /* ===== Final result panel (signature scoreboard) ===== */
   .final-panel{
+    position:relative;overflow:hidden;
     border:1px solid var(--blue);border-radius:12px;
     background:linear-gradient(180deg, rgba(41,86,159,.14), rgba(41,86,159,.03));
     padding:6px;margin-bottom:22px;
   }
+  .final-panel .watermark{
+    position:absolute;inset:0;
+    display:flex;align-items:center;justify-content:center;
+    pointer-events:none;z-index:0;
+  }
+  .final-panel .watermark svg{
+    width:56%;max-width:280px;opacity:.05;
+  }
+  .final-panel .final-row, .final-panel .empty-note{position:relative;z-index:1;}
+  .final-panel .credit-tag{
+    position:relative;z-index:1;
+    display:flex;align-items:center;justify-content:center;gap:7px;
+    padding:9px 6px 7px;margin-top:2px;
+    border-top:1px dashed var(--border);
+    font-family:'JetBrains Mono',monospace;font-size:10px;
+    letter-spacing:.09em;text-transform:uppercase;color:var(--muted-dim);
+  }
+  .final-panel .credit-tag b{color:var(--green-bright);}
   .final-row{
     display:flex;align-items:center;gap:12px;
     padding:11px 12px;border-radius:8px;
@@ -424,6 +443,25 @@
   }
   .btn-pdf-bottom:active{transform:scale(.985);}
   .btn-pdf-bottom:disabled{opacity:.6;cursor:wait;}
+
+  .action-row{display:flex;gap:10px;margin-top:4px;}
+  .action-row .btn-pdf-bottom{margin-top:0;flex:1;}
+  .btn-whats-bottom{
+    flex:1;display:flex;align-items:center;justify-content:center;gap:8px;
+    padding:15px;background:#25D366;border:1px solid #1FAE55;color:#06210F;
+    font-family:'Inter',sans-serif;font-size:15px;font-weight:700;
+    border-radius:10px;cursor:pointer;
+    transition:filter .15s, transform .1s;
+  }
+  .btn-whats-bottom:active{transform:scale(.985);}
+  .btn-whats-bottom:disabled{opacity:.6;cursor:wait;}
+  .btn-whats-bottom:hover{filter:brightness(1.05);}
+  @media (max-width:560px){
+    .action-row{flex-direction:column;}
+  }
+  @media (min-width:521px){
+    .action-row{display:none;} /* no desktop, o botão "Gerar PDF" do topo já resolve */
+  }
   @media (max-width:520px){
     .btn-pdf-bottom{display:block;}
     .heading-actions .btn-pdf{display:none;}
@@ -717,7 +755,17 @@
           <button class="btn-pdf" id="btnPdf">Gerar PDF</button>
         </div>
       </div>
-      <div class="final-panel" id="finalPanel"></div>
+      <div class="final-panel" id="finalPanel">
+        <div class="watermark" aria-hidden="true">
+          <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="36" cy="26" r="20" fill="#EEF3FB"/>
+            <path d="M36 10 A16 16 0 0 1 50 34 L36 26 Z" fill="#EEF3FB"/>
+            <path d="M36 42 A16 16 0 0 1 22 18 L36 26 Z" fill="#EEF3FB"/>
+            <path d="M50 34 A16 16 0 0 1 22 18" fill="#EEF3FB"/>
+            <rect x="14" y="40" width="7" height="18" rx="3.5" transform="rotate(45 17.5 49)" fill="#EEF3FB"/>
+          </svg>
+        </div>
+      </div>
 
       <div class="panel-heading">
         <h2>Resultado por partido</h2>
@@ -743,7 +791,13 @@
       </div>
       <div class="result-panel" id="electedPanel"></div>
 
-      <button class="btn-pdf-bottom" id="btnPdfBottom">Gerar PDF da simulação</button>
+      <div class="action-row">
+        <button class="btn-pdf-bottom" id="btnPdfBottom">Gerar PDF da simulação</button>
+        <button class="btn-whats-bottom" id="btnWhatsBottom">
+          <svg viewBox="0 0 24 24" width="17" height="17" fill="currentColor" aria-hidden="true"><path d="M12.02 2C6.5 2 2.02 6.48 2.02 12c0 1.85.5 3.58 1.36 5.08L2 22l5.06-1.33A9.94 9.94 0 0 0 12.02 22C17.55 22 22 17.52 22 12S17.55 2 12.02 2zm0 18.1c-1.62 0-3.13-.45-4.42-1.23l-.32-.19-3.01.79.8-2.93-.2-.3A8.09 8.09 0 0 1 3.9 12c0-4.48 3.65-8.1 8.12-8.1 4.48 0 8.11 3.62 8.11 8.1s-3.63 8.1-8.11 8.1zm4.44-6.06c-.24-.12-1.43-.7-1.65-.79-.22-.08-.38-.12-.55.12-.16.24-.63.79-.77.95-.14.16-.28.18-.53.06-.24-.12-1.02-.38-1.94-1.2-.72-.64-1.2-1.43-1.34-1.67-.14-.24-.02-.37.11-.49.11-.11.24-.28.36-.42.12-.14.16-.24.24-.4.08-.16.04-.3-.02-.42-.06-.12-.55-1.33-.76-1.82-.2-.48-.4-.42-.55-.42-.14-.01-.3-.01-.46-.01-.16 0-.42.06-.64.3-.22.24-.84.82-.84 2s.86 2.32.98 2.48c.12.16 1.7 2.6 4.13 3.64.58.25 1.03.4 1.38.51.58.18 1.11.16 1.53.1.47-.07 1.43-.58 1.63-1.15.2-.56.2-1.04.14-1.15-.06-.1-.22-.16-.46-.28z"/></svg>
+          Enviar por WhatsApp
+        </button>
+      </div>
     </div>
   </div>
 
@@ -1210,11 +1264,13 @@ function recalc(){
 
   // painel dos mais votados (ranking bruto, antes do coeficiente)
   const finalPanel = document.getElementById('finalPanel');
+  const watermarkHTML = '<div class="watermark" aria-hidden="true"><svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg"><circle cx="36" cy="26" r="20" fill="#EEF3FB"/><path d="M36 10 A16 16 0 0 1 50 34 L36 26 Z" fill="#EEF3FB"/><path d="M36 42 A16 16 0 0 1 22 18 L36 26 Z" fill="#EEF3FB"/><path d="M50 34 A16 16 0 0 1 22 18" fill="#EEF3FB"/><rect x="14" y="40" width="7" height="18" rx="3.5" transform="rotate(45 17.5 49)" fill="#EEF3FB"/></svg></div>';
+  const creditHTML = '<div class="credit-tag">Simulação <b>Lupa1</b> &middot; lupa1eleicoes2026.com.br</div>';
   document.getElementById('finalCount').textContent = `top 15 · corte na ${r.vagas}ª`;
   if(r.topVotados.length===0){
-    finalPanel.innerHTML = `<div class="empty-note">Preencha a votação pra ver o ranking.</div>`;
+    finalPanel.innerHTML = watermarkHTML + `<div class="empty-note">Preencha a votação pra ver o ranking.</div>`;
   } else {
-    finalPanel.innerHTML = r.topVotados.map((c,i)=>{
+    finalPanel.innerHTML = watermarkHTML + r.topVotados.map((c,i)=>{
       const corte = (i === r.vagas) ? ' corte-acima' : '';
       return `
       <div class="final-row${c.eleito?' fr-eleito':' fr-fora'}${corte}">
@@ -1225,7 +1281,7 @@ function recalc(){
         <span class="fstatus">${c.eleito?'entra':'fora'}</span>
         <span class="fvotes">${fmt(c.votes)}</span>
       </div>`;
-    }).join('');
+    }).join('') + creditHTML;
   }
 
   // results table
@@ -1275,21 +1331,38 @@ function recalc(){
 recalc();
 
 /* ---------- PDF export ---------- */
-function gerarPDF(btn){
-  const original = btn.textContent;
-  btn.disabled = true; btn.textContent = 'Gerando...';
+function mostrarStatusPDF(msg, tipo){
+  let toast = document.getElementById('pdfToast');
+  if(!toast){
+    toast = document.createElement('div');
+    toast.id = 'pdfToast';
+    toast.style.cssText = `
+      position:fixed;left:50%;bottom:22px;transform:translateX(-50%);
+      max-width:88vw;z-index:999;padding:12px 18px;border-radius:10px;
+      font-family:'Inter',sans-serif;font-size:13px;font-weight:600;
+      box-shadow:0 10px 30px rgba(0,0,0,.4);text-align:center;line-height:1.4;
+    `;
+    document.body.appendChild(toast);
+  }
+  toast.textContent = msg;
+  toast.style.background = tipo === 'err' ? '#E2453C' : '#29569F';
+  toast.style.color = '#fff';
+  toast.style.display = 'block';
+  clearTimeout(toast._t);
+  toast._t = setTimeout(()=>{ toast.style.display = 'none'; }, tipo === 'err' ? 7000 : 4000);
+}
 
-  try{
-    const { jsPDF } = window.jspdf;
-    const doc = new jsPDF({unit:'pt', format:'a4'});
-    const pageW = doc.internal.pageSize.getWidth();
-    const margin = 42;
-    let y = 0;
+function construirPDF(){
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF({unit:'pt', format:'a4'});
+  const pageW = doc.internal.pageSize.getWidth();
+  const margin = 42;
+  let y = 0;
 
-    const BLUE = [41,86,159];
-    const GREEN = [73,173,74];
-    const INK = [30,38,54];
-    const MUTED = [110,125,150];
+  const BLUE = [41,86,159];
+  const GREEN = [73,173,74];
+  const INK = [30,38,54];
+  const MUTED = [110,125,150];
 
     const r = calculate();
     const now = new Date();
@@ -1455,9 +1528,93 @@ function gerarPDF(btn){
     const split = doc.splitTextToSize(note, pageW - margin*2);
     doc.text(split, margin, y);
 
-    doc.save('lupa1-simulacao-eleicoes-2026.pdf');
+  return doc;
+}
+
+const NOME_ARQUIVO_PDF = 'lupa1-simulacao-eleicoes-2026.pdf';
+
+// Tenta abrir a folha nativa de compartilhamento (a mesma do botão "Compartilhar"
+// de fotos no celular). É o caminho mais confiável: funciona em iPhone e Android,
+// mostra pra onde o arquivo está indo, e já lista o WhatsApp entre as opções.
+async function tentarCompartilhar(doc, textoExtra){
+  if(!navigator.share || !navigator.canShare) return false;
+  try{
+    const blob = doc.output('blob');
+    const arquivo = new File([blob], NOME_ARQUIVO_PDF, {type:'application/pdf'});
+    if(!navigator.canShare({files:[arquivo]})) return false;
+    await navigator.share({
+      files:[arquivo],
+      title:'Simulação Lupa1 Eleição 2026',
+      text: textoExtra || 'Simulação da eleição 2026 pro Piauí, feita no lupa1eleicoes2026.com.br'
+    });
+    return true;
+  }catch(err){
+    // usuário cancelou o compartilhamento — não é erro, só não faz nada
+    if(err && err.name === 'AbortError') return true;
+    return false;
+  }
+}
+
+function abrirOuBaixar(doc){
+  let entregue = false;
+  try{
+    const blob = doc.output('blob');
+    const url = URL.createObjectURL(blob);
+    const nova = window.open(url, '_blank');
+    if(nova){
+      entregue = true;
+      setTimeout(()=>URL.revokeObjectURL(url), 60000);
+      mostrarStatusPDF('PDF gerado. Abriu numa nova aba — use o ícone de compartilhar/salvar do navegador para guardar.', 'ok');
+    }
+  }catch(e){ /* segue para o fallback abaixo */ }
+
+  if(!entregue){
+    doc.save(NOME_ARQUIVO_PDF);
+    mostrarStatusPDF('PDF baixado. No iPhone, ele fica no app Arquivos, dentro de Downloads.', 'ok');
+  }
+}
+
+async function gerarPDF(btn){
+  const original = btn.textContent;
+
+  if(typeof window.jspdf === 'undefined'){
+    mostrarStatusPDF('As bibliotecas de PDF ainda não carregaram. Verifique sua internet e tente de novo em alguns segundos.', 'err');
+    return;
+  }
+
+  btn.disabled = true; btn.textContent = 'Gerando...';
+  try{
+    const doc = construirPDF();
+    const compartilhou = await tentarCompartilhar(doc);
+    if(!compartilhou) abrirOuBaixar(doc);
   } catch(err){
-    alert('Não foi possível gerar o PDF: ' + err.message);
+    mostrarStatusPDF('Não foi possível gerar o PDF: ' + err.message, 'err');
+    console.error(err);
+  } finally {
+    btn.disabled = false; btn.textContent = original;
+  }
+}
+
+async function enviarWhatsApp(btn){
+  const original = btn.textContent;
+
+  if(typeof window.jspdf === 'undefined'){
+    mostrarStatusPDF('As bibliotecas de PDF ainda não carregaram. Verifique sua internet e tente de novo em alguns segundos.', 'err');
+    return;
+  }
+
+  btn.disabled = true; btn.textContent = 'Gerando...';
+  try{
+    const doc = construirPDF();
+    const compartilhou = await tentarCompartilhar(doc, 'Simulação da eleição 2026 pro Piauí — dá uma olhada!');
+    if(!compartilhou){
+      // Navegador sem suporte a compartilhar arquivos (comum em desktop):
+      // abre o PDF normalmente e explica o próximo passo.
+      abrirOuBaixar(doc);
+      mostrarStatusPDF('Esse navegador não abre o compartilhamento direto pro WhatsApp. O PDF foi aberto/baixado — anexe ele manualmente na conversa.', 'err');
+    }
+  } catch(err){
+    mostrarStatusPDF('Não foi possível gerar o PDF: ' + err.message, 'err');
     console.error(err);
   } finally {
     btn.disabled = false; btn.textContent = original;
@@ -1466,6 +1623,7 @@ function gerarPDF(btn){
 
 document.getElementById('btnPdf').addEventListener('click', (e)=>gerarPDF(e.currentTarget));
 document.getElementById('btnPdfBottom').addEventListener('click', (e)=>gerarPDF(e.currentTarget));
+document.getElementById('btnWhatsBottom').addEventListener('click', (e)=>enviarWhatsApp(e.currentTarget));
 </script>
 </body>
 </html>
