@@ -274,6 +274,53 @@
     .saldo-hint{min-width:0;}
   }
 
+  /* ===== Painel de raciocínio (explicação passo a passo) ===== */
+  .reasoning-panel{
+    border:1px solid var(--border);border-radius:12px;background:var(--panel);
+    margin-bottom:18px;overflow:hidden;
+  }
+  .reasoning-panel summary{
+    cursor:pointer;list-style:none;
+    display:flex;align-items:center;gap:10px;flex-wrap:wrap;
+    padding:13px 16px;background:var(--panel-alt);
+  }
+  .reasoning-panel summary::-webkit-details-marker{display:none;}
+  .reasoning-panel .chevron{color:var(--muted);font-size:11px;transition:transform .2s;flex:none;}
+  .reasoning-panel[open] summary .chevron{transform:rotate(90deg);}
+  .reasoning-panel .rp-title{
+    font-family:'Oswald',sans-serif;font-weight:600;font-size:14px;letter-spacing:.02em;
+  }
+  .reasoning-panel .rp-sub{
+    font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);
+  }
+  .rp-body{padding:6px 16px 14px;}
+  .rp-empty{padding:14px 2px;color:var(--muted-dim);font-size:13px;}
+  .rp-step{
+    display:flex;gap:11px;padding:9px 2px;
+    border-bottom:1px solid var(--border-soft);
+    font-size:13px;line-height:1.5;color:var(--ink);
+  }
+  .rp-step:last-child{border-bottom:none;}
+  .rp-step .rp-dot{
+    width:8px;height:8px;border-radius:50%;flex:none;margin-top:5px;
+  }
+  .rp-step.rp-direta .rp-dot{background:var(--green-bright);}
+  .rp-step.rp-sobra .rp-dot{background:var(--gold);}
+  .rp-step.rp-residual .rp-dot{background:#FF8A80;}
+  .rp-step.rp-semvaga .rp-dot{background:var(--muted-dim);}
+  .rp-step.rp-semvaga{color:var(--muted-dim);}
+  .rp-step.rp-transicao{
+    background:rgba(41,86,159,.1);border-radius:8px;padding:10px 12px;
+    margin:6px 0;border-bottom:none;font-weight:600;
+  }
+  .rp-step.rp-transicao .rp-dot{background:var(--blue-bright);}
+  .rp-step.rp-sem-solucao{
+    background:rgba(226,69,60,.1);border-radius:8px;padding:10px 12px;
+    border-bottom:none;color:#FF8A80;
+  }
+  .rp-step.rp-sem-solucao .rp-dot{background:#E2453C;}
+  .rp-step b{color:var(--ink);}
+
   /* ===== Final result panel (signature scoreboard) ===== */
   .final-panel{
     position:relative;overflow:hidden;
@@ -281,24 +328,26 @@
     background:linear-gradient(180deg, rgba(41,86,159,.14), rgba(41,86,159,.03));
     padding:6px;margin-bottom:22px;
   }
-  .final-panel .watermark{
+  .watermarked{position:relative;overflow:hidden;}
+  .watermarked .watermark{
     position:absolute;inset:0;
     display:flex;align-items:center;justify-content:center;
     pointer-events:none;z-index:0;
   }
-  .final-panel .watermark svg{
-    width:56%;max-width:280px;opacity:.05;
+  .watermarked .watermark svg{
+    width:72%;max-width:340px;opacity:.07;
   }
-  .final-panel .final-row, .final-panel .empty-note{position:relative;z-index:1;}
-  .final-panel .credit-tag{
+  .final-panel .final-row, .final-panel .empty-note,
+  .watermarked > *:not(.watermark){position:relative;z-index:1;}
+  .credit-tag{
     position:relative;z-index:1;
     display:flex;align-items:center;justify-content:center;gap:7px;
-    padding:9px 6px 7px;margin-top:2px;
+    padding:10px 6px 6px;margin-top:4px;
     border-top:1px dashed var(--border);
     font-family:'JetBrains Mono',monospace;font-size:10px;
     letter-spacing:.09em;text-transform:uppercase;color:var(--muted-dim);
   }
-  .final-panel .credit-tag b{color:var(--green-bright);}
+  .credit-tag b{color:var(--green-bright);}
   .final-row{
     display:flex;align-items:center;gap:12px;
     padding:11px 12px;border-radius:8px;
@@ -430,11 +479,25 @@
   }
   .btn-ghost:hover{border-color:var(--blue);color:var(--ink);}
 
-  .heading-actions{display:flex;align-items:center;gap:12px;}
+  .heading-actions{display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
 
-  /* Botão de PDF no rodapé da coluna: só no celular, onde a leitura é de cima para baixo */
+  .btn-pdf, .btn-whats{
+    font-family:'Inter',sans-serif;font-size:12px;font-weight:700;
+    padding:7px 13px;border-radius:7px;cursor:pointer;
+    display:flex;align-items:center;gap:6px;
+    transition:filter .15s, transform .1s;
+  }
+  .btn-pdf{background:var(--blue);border:1px solid var(--blue-bright);color:#fff;}
+  .btn-pdf:hover{filter:brightness(1.12);}
+  .btn-pdf:active{transform:scale(.97);}
+  .btn-pdf:disabled{opacity:.6;cursor:wait;}
+  .btn-whats{background:#25D366;border:1px solid #1FAE55;color:#06210F;}
+  .btn-whats:hover{filter:brightness(1.08);}
+  .btn-whats:active{transform:scale(.97);}
+  .btn-whats:disabled{opacity:.6;cursor:wait;}
+
+  /* Linha de botões cheios, no rodapé da coluna — conveniente pra quem lê de cima pra baixo no celular */
   .btn-pdf-bottom{
-    display:none;
     width:100%;margin-top:4px;padding:15px;
     background:var(--blue);border:1px solid var(--blue-bright);color:#fff;
     font-family:'Inter',sans-serif;font-size:15px;font-weight:700;
@@ -460,22 +523,8 @@
     .action-row{flex-direction:column;}
   }
   @media (min-width:521px){
-    .action-row{display:none;} /* no desktop, o botão "Gerar PDF" do topo já resolve */
+    .action-row{display:none;} /* no desktop, os botões do topo já resolvem */
   }
-  @media (max-width:520px){
-    .btn-pdf-bottom{display:block;}
-    .heading-actions .btn-pdf{display:none;}
-  }
-  .btn-pdf{
-    background:var(--blue);border:1px solid var(--blue-bright);color:#fff;
-    font-family:'Inter',sans-serif;font-size:12px;font-weight:700;
-    padding:7px 13px;border-radius:7px;cursor:pointer;
-    display:flex;align-items:center;gap:6px;
-    transition:filter .15s, transform .1s;
-  }
-  .btn-pdf:hover{filter:brightness(1.12);}
-  .btn-pdf:active{transform:scale(.97);}
-  .btn-pdf:disabled{opacity:.6;cursor:wait;}
 
   /* ---- input column ---- */
   .input-scroll{
@@ -611,6 +660,14 @@
   .elected-list li .vt{
     font-family:'JetBrains Mono',monospace;font-size:12.5px;color:var(--muted);
   }
+  .elected-list li .via{
+    font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:.06em;
+    text-transform:uppercase;padding:2px 7px;border-radius:5px;flex:none;
+  }
+  .elected-list li .via-direta{background:rgba(73,173,74,.16);color:var(--green-bright);}
+  .elected-list li .via-sobra{background:rgba(242,169,60,.16);color:var(--gold);}
+  .elected-list li .via-residual{background:rgba(226,69,60,.16);color:#FF8A80;}
+  .elected-list li.suplente .via{display:none;}
   .elected-list li.suplente{
     opacity:.55;border-style:dashed;
   }
@@ -752,17 +809,22 @@
         <h2>Ranking bruto dos 15 mais votados</h2>
         <div class="heading-actions">
           <span class="count" id="finalCount"></span>
-          <button class="btn-pdf" id="btnPdf">Gerar PDF</button>
+          <button class="btn-pdf" id="btnPdf">Abrir PDF</button>
+          <button class="btn-whats" id="btnWhats">
+            <svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor" aria-hidden="true"><path d="M12.02 2C6.5 2 2.02 6.48 2.02 12c0 1.85.5 3.58 1.36 5.08L2 22l5.06-1.33A9.94 9.94 0 0 0 12.02 22C17.55 22 22 17.52 22 12S17.55 2 12.02 2zm0 18.1c-1.62 0-3.13-.45-4.42-1.23l-.32-.19-3.01.79.8-2.93-.2-.3A8.09 8.09 0 0 1 3.9 12c0-4.48 3.65-8.1 8.12-8.1 4.48 0 8.11 3.62 8.11 8.1s-3.63 8.1-8.11 8.1zm4.44-6.06c-.24-.12-1.43-.7-1.65-.79-.22-.08-.38-.12-.55.12-.16.24-.63.79-.77.95-.14.16-.28.18-.53.06-.24-.12-1.02-.38-1.94-1.2-.72-.64-1.2-1.43-1.34-1.67-.14-.24-.02-.37.11-.49.11-.11.24-.28.36-.42.12-.14.16-.24.24-.4.08-.16.04-.3-.02-.42-.06-.12-.55-1.33-.76-1.82-.2-.48-.4-.42-.55-.42-.14-.01-.3-.01-.46-.01-.16 0-.42.06-.64.3-.22.24-.84.82-.84 2s.86 2.32.98 2.48c.12.16 1.7 2.6 4.13 3.64.58.25 1.03.4 1.38.51.58.18 1.11.16 1.53.1.47-.07 1.43-.58 1.63-1.15.2-.56.2-1.04.14-1.15-.06-.1-.22-.16-.46-.28z"/></svg>
+            WhatsApp
+          </button>
         </div>
       </div>
-      <div class="final-panel" id="finalPanel">
+      <div class="final-panel watermarked" id="finalPanel">
         <div class="watermark" aria-hidden="true">
-          <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
-            <circle cx="36" cy="26" r="20" fill="#EEF3FB"/>
-            <path d="M36 10 A16 16 0 0 1 50 34 L36 26 Z" fill="#EEF3FB"/>
-            <path d="M36 42 A16 16 0 0 1 22 18 L36 26 Z" fill="#EEF3FB"/>
-            <path d="M50 34 A16 16 0 0 1 22 18" fill="#EEF3FB"/>
-            <rect x="14" y="40" width="7" height="18" rx="3.5" transform="rotate(45 17.5 49)" fill="#EEF3FB"/>
+          <svg viewBox="0 0 220 64" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="28" cy="26" r="20" fill="#EEF3FB"/>
+            <path d="M28 10 A16 16 0 0 1 42 34 L28 26 Z" fill="#EEF3FB"/>
+            <path d="M28 42 A16 16 0 0 1 14 18 L28 26 Z" fill="#EEF3FB"/>
+            <path d="M42 34 A16 16 0 0 1 14 18" fill="#EEF3FB"/>
+            <rect x="6" y="40" width="7" height="18" rx="3.5" transform="rotate(45 9.5 49)" fill="#EEF3FB"/>
+            <text x="58" y="41" font-family="Oswald, sans-serif" font-size="40" font-weight="700" fill="#EEF3FB" letter-spacing="1">LUPA1</text>
           </svg>
         </div>
       </div>
@@ -786,13 +848,22 @@
         </div>
       </div>
 
+      <details class="reasoning-panel" id="reasoningPanel" open>
+        <summary>
+          <span class="chevron">&#9656;</span>
+          <span class="rp-title">Como chegamos nesse resultado</span>
+          <span class="rp-sub">passo a passo do cálculo</span>
+        </summary>
+        <div class="rp-body" id="reasoningBody"></div>
+      </details>
+
       <div class="panel-heading">
         <h2>Deputados eleitos</h2>
       </div>
-      <div class="result-panel" id="electedPanel"></div>
+      <div class="result-panel watermarked" id="electedPanel"></div>
 
       <div class="action-row">
-        <button class="btn-pdf-bottom" id="btnPdfBottom">Gerar PDF da simulação</button>
+        <button class="btn-pdf-bottom" id="btnPdfBottom">Abrir PDF da simulação</button>
         <button class="btn-whats-bottom" id="btnWhatsBottom">
           <svg viewBox="0 0 24 24" width="17" height="17" fill="currentColor" aria-hidden="true"><path d="M12.02 2C6.5 2 2.02 6.48 2.02 12c0 1.85.5 3.58 1.36 5.08L2 22l5.06-1.33A9.94 9.94 0 0 0 12.02 22C17.55 22 22 17.52 22 12S17.55 2 12.02 2zm0 18.1c-1.62 0-3.13-.45-4.42-1.23l-.32-.19-3.01.79.8-2.93-.2-.3A8.09 8.09 0 0 1 3.9 12c0-4.48 3.65-8.1 8.12-8.1 4.48 0 8.11 3.62 8.11 8.1s-3.63 8.1-8.11 8.1zm4.44-6.06c-.24-.12-1.43-.7-1.65-.79-.22-.08-.38-.12-.55.12-.16.24-.63.79-.77.95-.14.16-.28.18-.53.06-.24-.12-1.02-.38-1.94-1.2-.72-.64-1.2-1.43-1.34-1.67-.14-.24-.02-.37.11-.49.11-.11.24-.28.36-.42.12-.14.16-.24.24-.4.08-.16.04-.3-.02-.42-.06-.12-.55-1.33-.76-1.82-.2-.48-.4-.42-.55-.42-.14-.01-.3-.01-.46-.01-.16 0-.42.06-.64.3-.22.24-.84.82-.84 2s.86 2.32.98 2.48c.12.16 1.7 2.6 4.13 3.64.58.25 1.03.4 1.38.51.58.18 1.11.16 1.53.1.47-.07 1.43-.58 1.63-1.15.2-.56.2-1.04.14-1.15-.06-.1-.22-.16-.46-.28z"/></svg>
           Enviar por WhatsApp
@@ -802,7 +873,7 @@
   </div>
 
   <div class="footnote">
-    <b>Como o cálculo funciona:</b> QE = votos válidos ÷ vagas (parte inteira). Cada partido recebe vagas diretas = votos do partido ÷ QE (parte inteira), desde que o partido tenha atingido o QE. As vagas restantes são distribuídas pelo método das médias (maiores médias / D'Hondt): a cada rodada, calcula-se votos ÷ (vagas atuais + 1) para os partidos elegíveis, e a maior média leva a vaga. Só disputa sobra o partido que atingiu o QE <b>e</b> tem ao menos um candidato com 10% do QE em votos. Dentro do partido, são eleitos os mais votados entre os que atingiram o piso individual de 10% do QE; abaixo disso, o candidato é listado como suplente. Cores de partido são apenas para diferenciação visual no simulador, não são as cores oficiais das legendas.
+    <b>Como o cálculo funciona:</b> QE = votos válidos ÷ vagas (parte inteira, com arredondamento pra cima se a fração for ≥ 0,5). <b>Fase 1 — vagas diretas:</b> cada partido recebe votos do partido ÷ QE (parte inteira), desde que tenha atingido 100% do QE; assume a cadeira quem tiver ao menos 10% do QE em votos nominais. <b>Fase 2 — sobras:</b> só disputam as vagas restantes partidos com pelo menos 80% do QE, com candidato próprio com pelo menos 20% do QE; vence a maior média (votos ÷ vagas atuais + 1), recalculada a cada rodada. <b>Fase 3 — sobras das sobras:</b> quando nenhum partido/candidato atende mais aos 80%/20%, essa barreira cai (decisão do STF, ADIs 7228/7263/7325) e todos os partidos voltam a disputar as vagas restantes pela maior média, valendo só o piso geral de 10% do QE pro candidato assumir a cadeira. Cores de partido são apenas para diferenciação visual no simulador, não são as cores oficiais das legendas.
   </div>
 
   <div class="hit-counter" id="hitCounter" hidden>
@@ -1104,17 +1175,22 @@ function calculate(){
     seats[p] = (QE>0 && atingeQE[p]) ? Math.floor(partyVotes[p]/QE) : 0;
   });
 
-  const eligible = {};
-  const capacidade = {}; // quantas vagas o partido consegue de fato ocupar
+  const capacidade = {}; // quantas vagas o partido consegue de fato ocupar (piso geral de 10% do QE)
   const vagasRestante = {}; // vagas que seriam ocupadas por candidatos ainda não nomeados
+  const capacidade20 = {}; // candidatos (ou vagas do "restante") que atingem 20% do QE — piso da 1ª rodada de sobras
+  const teto20 = QE * 0.20;
   PARTIES.forEach(p=>{
     const aptos = CANDIDATES.filter(c=>c.bloco===p && (state.votes[c.id]||0) >= piso).length;
+    const aptos20 = CANDIDATES.filter(c=>c.bloco===p && (state.votes[c.id]||0) >= teto20).length;
     // O bloco "restante" representa candidatos que você não estimou um a um.
     // Cada vaga que ele poderia ocupar exige ao menos o piso individual em votos.
     const doRestante = piso>0 ? Math.floor((state.restante[p]||0) / piso) : 0;
     vagasRestante[p] = doRestante;
     capacidade[p] = aptos + doRestante;
-    eligible[p] = atingeQE[p] && capacidade[p] > 0 && QE>0;
+    // quantas dessas vagas do "restante" também sustentam individualmente 20% do QE
+    const mediaPorVaga = doRestante>0 ? (state.restante[p]||0)/doRestante : 0;
+    const doRestante20 = (doRestante>0 && mediaPorVaga >= teto20) ? doRestante : 0;
+    capacidade20[p] = aptos20 + doRestante20;
   });
 
   // Um partido não pode ocupar mais vagas do que tem candidatos aptos.
@@ -1123,21 +1199,85 @@ function calculate(){
     if(seats[p] > capacidade[p]) seats[p] = capacidade[p];
   });
 
+  // Registro do raciocínio, pra explicar em texto como cada vaga foi decidida.
+  const raciocinio = [];
+  const sortedByVotesDesc = [...PARTIES].sort((a,b)=>partyVotes[b]-partyVotes[a]);
+  sortedByVotesDesc.forEach(p=>{
+    if(partyVotes[p]<=0) return;
+    if(atingeQE[p]){
+      raciocinio.push({
+        etapa:'direta', partido:p,
+        texto: `${p} somou ${fmt(partyVotes[p])} votos, acima do QE (${fmt(QE)}). ${fmt(partyVotes[p])} ÷ ${fmt(QE)} = ${(partyVotes[p]/QE).toFixed(2)} → parte inteira: ${seats[p]} vaga${seats[p]===1?'':'s'} direta${seats[p]===1?'':'s'}.`
+      });
+    } else if(QE>0) {
+      raciocinio.push({
+        etapa:'direta', partido:p, semvaga:true,
+        texto: `${p} somou ${fmt(partyVotes[p])} votos, abaixo do QE (${fmt(QE)}) — não recebe vaga direta.`
+      });
+    }
+  });
+
   let usedSeats = Object.values(seats).reduce((a,b)=>a+b,0);
   let remaining = Math.max(0, vagas - usedSeats);
 
-  const sobras = {}; PARTIES.forEach(p=>sobras[p]=0);
+  // ---- Distribuição de sobras em 3 fases, conforme a regra vigente em 2026 (pós-STF, ADIs 7228/7263/7325) ----
+  // Fase 1 (vagas diretas) já foi resolvida acima.
+  // Fase 2 (1ª rodada de sobras): só disputam partidos com ≥80% do QE, com candidato ≥20% do QE.
+  // Fase 3 ("sobras das sobras"): quando não sobra mais ninguém elegível pela fase 2,
+  //   TODOS os partidos voltam a disputar as vagas restantes, sem piso de 80%/20% —
+  //   respeitado apenas o piso geral de 10% do QE para o candidato assumir a cadeira.
+  const atingeQE80 = {};
+  PARTIES.forEach(p=>{ atingeQE80[p] = QE>0 && partyVotes[p] >= QE*0.80; });
+
+  if(remaining>0){
+    raciocinio.push({etapa:'transicao-fase2', texto:
+      `Restam ${remaining} vaga${remaining===1?'':'s'} após a distribuição direta. Entra a fase 2 (sobras): só disputam partidos com pelo menos 80% do QE (${fmt(QE*0.8)}) e que tenham candidato com pelo menos 20% do QE (${fmt(QE*0.2)}).`
+    });
+  }
+
+  const sobras = {}; const sobrasFase2 = {}; const sobrasFase3 = {};
+  PARTIES.forEach(p=>{ sobras[p]=0; sobrasFase2[p]=0; sobrasFase3[p]=0; });
   let overflowWarning = false;
-  for(let round=0; round<remaining; round++){
+  let faseAtual = 2;
+  let numeroVaga = usedSeats;
+
+  while(remaining > 0){
     let best=null, bestAvg=-1;
+    const mediasRodada = [];
     PARTIES.forEach(p=>{
-      if(!eligible[p]) return;
       if(seats[p] >= capacidade[p]) return; // partido já esgotou seus candidatos aptos
+      if(faseAtual === 2){
+        if(!atingeQE80[p]) return;
+        if(sobrasFase2[p] >= capacidade20[p]) return; // esgotou candidatos com 20% do QE
+      }
+      // fase 3: qualquer partido com vaga disponível concorre, sem piso de QE
       const avg = partyVotes[p] / (seats[p] + 1);
+      mediasRodada.push({p, avg});
       if(avg > bestAvg){ bestAvg = avg; best = p; }
     });
-    if(best){ seats[best]++; sobras[best]++; }
-    else { overflowWarning = true; break; }
+    if(best){
+      seats[best]++; sobras[best]++;
+      if(faseAtual === 2) sobrasFase2[best]++; else sobrasFase3[best]++;
+      remaining--; numeroVaga++;
+      const disputantes = mediasRodada.length;
+      raciocinio.push({
+        etapa: faseAtual===2 ? 'sobra' : 'residual', partido:best,
+        texto: `Vaga ${numeroVaga}: ${best} vence com a maior média (${fmt(bestAvg)})` +
+          (disputantes>1 ? `, entre ${disputantes} partido${disputantes===1?'':'s'} concorrendo nessa rodada` : '') +
+          ` → soma ${seats[best]} vaga${seats[best]===1?'':'s'} no total.`
+      });
+    } else if(faseAtual === 2){
+      faseAtual = 3; // ninguém mais atende 80%/20% — abre a fase residual
+      raciocinio.push({etapa:'transicao-fase3', texto:
+        `Nenhum partido/candidato restante atende mais aos requisitos de 80%/20%. Abre a fase 3 (sobras das sobras): todos os partidos voltam a disputar as ${remaining} vaga${remaining===1?'':'s'} restante${remaining===1?'':'s'}, sem essa barreira — só vale o piso geral de 10% do QE pro candidato assumir a cadeira.`
+      });
+    } else {
+      overflowWarning = true;
+      raciocinio.push({etapa:'sem-solucao', texto:
+        `Restaram ${remaining} vaga${remaining===1?'':'s'} sem partido apto a ocupar no seu cenário — todos já esgotaram os candidatos disponíveis.`
+      });
+      break;
+    }
   }
 
   // elected candidates per party
@@ -1167,6 +1307,18 @@ function calculate(){
     const electedAll = [...elected, ...naoNomeados];
     const supplentes = [...qualifying.slice(nSeats), ...nonQualifying].slice(0,3);
 
+    // Marca cada eleito como "direta", "sobra" (1ª rodada, 80/20) ou "residual" (sobras das
+    // sobras, sem piso). A lei não atrela a vaga a um candidato específico — é o partido que
+    // recebe um número de vagas por fase, e dentro dele elegem-se os mais votados em ordem.
+    // Essa marcação segue a mesma convenção usada na cobertura jornalística de apuração.
+    const vagasDiretas = nSeats - sobras[p];
+    const vagasSobraNormal = sobrasFase2[p];
+    electedAll.forEach((c,i)=>{
+      if(i < vagasDiretas) c.tipo = 'direta';
+      else if(i < vagasDiretas + vagasSobraNormal) c.tipo = 'sobra';
+      else c.tipo = 'residual';
+    });
+
     if(nSeats > electedAll.length){
       warnings.push(`${p} tem ${nSeats} vaga(s) mas só ${electedAll.length} candidato(s) capaz(es) de ocupá-la(s) no seu cenário — informe mais votos nominais ou no campo "restante".`);
     }
@@ -1177,7 +1329,7 @@ function calculate(){
   const finalList = [];
   PARTIES.forEach(p=>{
     electedByParty[p].elected.forEach(c=>{
-      finalList.push({name:c.name, party:c.party||p, bloco:p, votes:c.votes});
+      finalList.push({name:c.name, party:c.party||p, bloco:p, votes:c.votes, tipo:c.tipo});
     });
   });
   finalList.sort((a,b)=>b.votes-a.votes);
@@ -1197,7 +1349,7 @@ function calculate(){
     .slice(0,15)
     .map(c=>({...c, eleito: eleitosSet.has(c.name)}));
 
-  return {partyVotes, totalValido, QE, piso, vagas, seats, atingeQE, eligible, sobras, electedByParty, warnings, overflowWarning, finalList, totalSeatsFilled, topVotados};
+  return {partyVotes, totalValido, QE, piso, vagas, seats, atingeQE, atingeQE80, sobras, sobrasFase2, sobrasFase3, electedByParty, warnings, overflowWarning, finalList, totalSeatsFilled, topVotados, raciocinio};
 }
 
 /* ---------- render ---------- */
@@ -1264,7 +1416,7 @@ function recalc(){
 
   // painel dos mais votados (ranking bruto, antes do coeficiente)
   const finalPanel = document.getElementById('finalPanel');
-  const watermarkHTML = '<div class="watermark" aria-hidden="true"><svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg"><circle cx="36" cy="26" r="20" fill="#EEF3FB"/><path d="M36 10 A16 16 0 0 1 50 34 L36 26 Z" fill="#EEF3FB"/><path d="M36 42 A16 16 0 0 1 22 18 L36 26 Z" fill="#EEF3FB"/><path d="M50 34 A16 16 0 0 1 22 18" fill="#EEF3FB"/><rect x="14" y="40" width="7" height="18" rx="3.5" transform="rotate(45 17.5 49)" fill="#EEF3FB"/></svg></div>';
+  const watermarkHTML = '<div class="watermark" aria-hidden="true"><svg viewBox="0 0 220 64" xmlns="http://www.w3.org/2000/svg"><circle cx="28" cy="26" r="20" fill="#EEF3FB"/><path d="M28 10 A16 16 0 0 1 42 34 L28 26 Z" fill="#EEF3FB"/><path d="M28 42 A16 16 0 0 1 14 18 L28 26 Z" fill="#EEF3FB"/><path d="M42 34 A16 16 0 0 1 14 18" fill="#EEF3FB"/><rect x="6" y="40" width="7" height="18" rx="3.5" transform="rotate(45 9.5 49)" fill="#EEF3FB"/><text x="58" y="41" font-family="Oswald, sans-serif" font-size="40" font-weight="700" fill="#EEF3FB" letter-spacing="1">LUPA1</text></svg></div>';
   const creditHTML = '<div class="credit-tag">Simulação <b>Lupa1</b> &middot; lupa1eleicoes2026.com.br</div>';
   document.getElementById('finalCount').textContent = `top 15 · corte na ${r.vagas}ª`;
   if(r.topVotados.length===0){
@@ -1304,14 +1456,14 @@ function recalc(){
   const electedPanel = document.getElementById('electedPanel');
   const withSeats = sortedParties.filter(p=>r.seats[p]>0);
   if(r.QE===0){
-    electedPanel.innerHTML = `<div class="empty-note">Preencha a votação pra ver os deputados eleitos aparecerem aqui.</div>`;
+    electedPanel.innerHTML = watermarkHTML + `<div class="empty-note">Preencha a votação pra ver os deputados eleitos aparecerem aqui.</div>`;
   } else if(withSeats.length===0){
-    electedPanel.innerHTML = `<div class="empty-note">Nenhum partido atingiu o quociente eleitoral ainda.</div>`;
+    electedPanel.innerHTML = watermarkHTML + `<div class="empty-note">Nenhum partido atingiu o quociente eleitoral ainda.</div>`;
   } else {
-    electedPanel.innerHTML = withSeats.map(p=>{
+    electedPanel.innerHTML = watermarkHTML + withSeats.map(p=>{
       const info = r.electedByParty[p];
       const elLis = info.elected.map((c,i)=>`
-        <li><span class="rank">${i+1}º</span><span class="nm">${c.name}${(c.party&&c.party!==p)?` <span class="tag">${c.party}</span>`:''}</span><span class="vt">${fmt(c.votes)}</span></li>
+        <li><span class="rank">${i+1}º</span><span class="nm">${c.name}${(c.party&&c.party!==p)?` <span class="tag">${c.party}</span>`:''}</span><span class="via via-${c.tipo}">${c.tipo}</span><span class="vt">${fmt(c.votes)}</span></li>
       `).join('');
       const supLis = info.supplentes.map((c,i)=>`
         <li class="suplente"><span class="rank">${i+1}º sup.</span><span class="nm">${c.name}</span><span class="vt">${fmt(c.votes)}</span></li>
@@ -1324,6 +1476,21 @@ function recalc(){
         </div>
         <ul class="elected-list">${elLis}${supLis}</ul>
       </div>`;
+    }).join('') + creditHTML;
+  }
+
+  // painel de raciocínio: explica em texto cada decisão do cálculo
+  const rpBody = document.getElementById('reasoningBody');
+  if(r.QE===0 || !r.raciocinio || r.raciocinio.length===0){
+    rpBody.innerHTML = `<div class="rp-empty">Preencha a votação pra ver o passo a passo do cálculo aqui.</div>`;
+  } else {
+    rpBody.innerHTML = r.raciocinio.map(passo=>{
+      let classe = 'rp-'+passo.etapa;
+      if(passo.etapa==='transicao-fase2' || passo.etapa==='transicao-fase3') classe += ' rp-transicao';
+      if(passo.semvaga) classe += ' rp-semvaga';
+      const partidoTag = passo.partido ? `<b>${passo.partido}</b> — ` : '';
+      const texto = passo.partido ? passo.texto.replace(passo.partido, `<b>${passo.partido}</b>`) : passo.texto;
+      return `<div class="rp-step ${classe}"><span class="rp-dot"></span><span>${texto}</span></div>`;
     }).join('');
   }
 }
@@ -1449,29 +1616,7 @@ function construirPDF(){
 
     if(y > 660){ doc.addPage(); y = 50; }
 
-    // --- Candidatos eleitos ---
-    doc.setFont('helvetica','bold');
-    doc.setFontSize(12);
-    doc.setTextColor(...BLUE);
-    doc.text('Candidatos eleitos', margin, y);
-    y += 8;
-
-    const finalRows = r.finalList.map((c,i)=>[String(i+1)+'º', c.name, c.party, fmt(c.votes)]);
-    doc.autoTable({
-      startY: y+6,
-      margin: {left: margin, right: margin},
-      head: [['#','Candidato','Partido','Votos']],
-      body: finalRows.length ? finalRows : [['—','Nenhum candidato eleito no cenário atual','','']],
-      theme: 'striped',
-      headStyles: {fillColor: BLUE, textColor: 255, fontStyle:'bold', fontSize:9.5},
-      bodyStyles: {fontSize:9.5, textColor: INK},
-      alternateRowStyles: {fillColor: [242,246,251]},
-      columnStyles: {0:{cellWidth:26, halign:'center'}, 2:{cellWidth:90}, 3:{cellWidth:70, halign:'right'}}
-    });
-    y = doc.lastAutoTable.finalY + 22;
-
-    if(y > 680){ doc.addPage(); y = 50; }
-
+    // --- Resultado por bloco (partido ou coligação) --- (na tela, vem logo após o ranking)
     doc.setFont('helvetica','bold');
     doc.setFontSize(12);
     doc.setTextColor(...GREEN);
@@ -1496,6 +1641,53 @@ function construirPDF(){
     });
     y = doc.lastAutoTable.finalY + 22;
 
+    // --- Como chegamos nesse resultado (mesmo texto explicativo que aparece na tela) ---
+    if(r.raciocinio && r.raciocinio.length){
+      if(y > 640){ doc.addPage(); y = 50; }
+      doc.setFont('helvetica','bold');
+      doc.setFontSize(12);
+      doc.setTextColor(...BLUE);
+      doc.text('Como chegamos nesse resultado', margin, y);
+      y += 14;
+
+      const coresPasso = {
+        direta: [73,150,73], sobra: [190,140,40], residual: [196,70,60],
+        'transicao-fase2': [41,86,159], 'transicao-fase3': [41,86,159], 'sem-solucao': [196,70,60]
+      };
+      const larguraTexto = pageW - margin*2 - 14;
+
+      r.raciocinio.forEach(passo=>{
+        const destaque = passo.etapa==='transicao-fase2' || passo.etapa==='transicao-fase3' || passo.etapa==='sem-solucao';
+        doc.setFont('helvetica', destaque ? 'bold' : 'normal');
+        doc.setFontSize(9);
+        const linhas = doc.splitTextToSize(passo.texto.replace(/→/g, '->'), larguraTexto);
+        const alturaBloco = linhas.length * 11 + (destaque ? 8 : 4);
+
+        if(y + alturaBloco > 760){ doc.addPage(); y = 50; }
+
+        if(destaque){
+          doc.setFillColor(230,238,248);
+          doc.roundedRect(margin, y-9, pageW - margin*2, alturaBloco, 3, 3, 'F');
+        }
+
+        const cor = coresPasso[passo.etapa] || [110,125,150];
+        doc.setFillColor(...cor);
+        doc.circle(margin + 4, y - 3.2, 1.6, 'F');
+
+        doc.setTextColor(...INK);
+        doc.text(linhas, margin + 12, y);
+        y += alturaBloco + (destaque ? 4 : 0);
+      });
+      y += 12;
+    }
+
+    if(y > 700){ doc.addPage(); y = 50; }
+    doc.setFont('helvetica','bold');
+    doc.setFontSize(12);
+    doc.setTextColor(...BLUE);
+    doc.text('Deputados eleitos', margin, y);
+    y += 14;
+
     sortedParties.filter(p=>r.seats[p]>0).forEach(p=>{
       if(y > 700){ doc.addPage(); y = 50; }
       const info = r.electedByParty[p];
@@ -1505,7 +1697,7 @@ function construirPDF(){
       doc.text(`${p} — ${info.nSeats} vaga${info.nSeats>1?'s':''}`, margin, y);
       y += 6;
       const rows = [
-        ...info.elected.map((c,i)=>[String(i+1)+'º', c.name, fmt(c.votes), 'eleito']),
+        ...info.elected.map((c,i)=>[String(i+1)+'º', c.name, fmt(c.votes), {'direta':'direta','sobra':'sobra','residual':'sobra das sobras'}[c.tipo]]),
         ...info.supplentes.map((c,i)=>[String(i+1)+'º sup.', c.name, fmt(c.votes), 'suplente']),
       ];
       doc.autoTable({
@@ -1524,7 +1716,7 @@ function construirPDF(){
     doc.setFontSize(8);
     doc.setTextColor(...MUTED);
     const coligTxt = Object.entries(COLIGACOES).map(([nome,membros])=>nome+' ('+membros.join(' + ')+')').join('; ');
-    const note = "Simulação hipotética, não vinculada a dados oficiais de votação. Regras aplicadas: quociente eleitoral (Art. 106 do Código Eleitoral), quociente partidário, piso individual de 10% do QE por candidato, cláusula de barreira para sobras e distribuição de sobras pelo método das maiores médias. Coligações consideradas: " + (coligTxt || 'nenhuma') + ". Partidos disputam as vagas como bloco único; dentro do bloco, elege-se por votação nominal.";
+    const note = "Simulação hipotética, não vinculada a dados oficiais de votação. Regras aplicadas: quociente eleitoral (Art. 106 do Código Eleitoral); vagas diretas por quociente partidário, com piso individual de 10% do QE; 1ª rodada de sobras restrita a partidos com 80% do QE e candidato com 20% do QE; 'sobras das sobras' sem essa barreira, conforme decisão do STF nas ADIs 7228, 7263 e 7325 — distribuição pelo método das maiores médias em ambas as rodadas de sobra. Coligações consideradas: " + (coligTxt || 'nenhuma') + ". Partidos disputam as vagas como bloco único; dentro do bloco, elege-se por votação nominal.";
     const split = doc.splitTextToSize(note, pageW - margin*2);
     doc.text(split, margin, y);
 
@@ -1533,48 +1725,12 @@ function construirPDF(){
 
 const NOME_ARQUIVO_PDF = 'lupa1-simulacao-eleicoes-2026.pdf';
 
-// Tenta abrir a folha nativa de compartilhamento (a mesma do botão "Compartilhar"
-// de fotos no celular). É o caminho mais confiável: funciona em iPhone e Android,
-// mostra pra onde o arquivo está indo, e já lista o WhatsApp entre as opções.
-async function tentarCompartilhar(doc, textoExtra){
-  if(!navigator.share || !navigator.canShare) return false;
-  try{
-    const blob = doc.output('blob');
-    const arquivo = new File([blob], NOME_ARQUIVO_PDF, {type:'application/pdf'});
-    if(!navigator.canShare({files:[arquivo]})) return false;
-    await navigator.share({
-      files:[arquivo],
-      title:'Simulação Lupa1 Eleição 2026',
-      text: textoExtra || 'Simulação da eleição 2026 pro Piauí, feita no lupa1eleicoes2026.com.br'
-    });
-    return true;
-  }catch(err){
-    // usuário cancelou o compartilhamento — não é erro, só não faz nada
-    if(err && err.name === 'AbortError') return true;
-    return false;
-  }
-}
-
-function abrirOuBaixar(doc){
-  let entregue = false;
-  try{
-    const blob = doc.output('blob');
-    const url = URL.createObjectURL(blob);
-    const nova = window.open(url, '_blank');
-    if(nova){
-      entregue = true;
-      setTimeout(()=>URL.revokeObjectURL(url), 60000);
-      mostrarStatusPDF('PDF gerado. Abriu numa nova aba — use o ícone de compartilhar/salvar do navegador para guardar.', 'ok');
-    }
-  }catch(e){ /* segue para o fallback abaixo */ }
-
-  if(!entregue){
-    doc.save(NOME_ARQUIVO_PDF);
-    mostrarStatusPDF('PDF baixado. No iPhone, ele fica no app Arquivos, dentro de Downloads.', 'ok');
-  }
-}
-
-async function gerarPDF(btn){
+// Botão "Gerar PDF": abre o PDF numa aba nova, sem forçar download nenhum.
+// Tudo acontece de forma síncrona, dentro do próprio clique — sem nenhum "await"
+// no meio — porque é exatamente essa espera que faz o Safari bloquear a aba.
+// Uma vez aberto, o usuário usa o botão de compartilhar do próprio navegador
+// pra mandar pra onde quiser (WhatsApp, Arquivos, imprimir, etc).
+function abrirPDF(btn){
   const original = btn.textContent;
 
   if(typeof window.jspdf === 'undefined'){
@@ -1582,19 +1738,29 @@ async function gerarPDF(btn){
     return;
   }
 
-  btn.disabled = true; btn.textContent = 'Gerando...';
   try{
     const doc = construirPDF();
-    const compartilhou = await tentarCompartilhar(doc);
-    if(!compartilhou) abrirOuBaixar(doc);
+    const blob = doc.output('blob');
+    const url = URL.createObjectURL(blob);
+    const nova = window.open(url, '_blank');
+    if(nova){
+      setTimeout(()=>URL.revokeObjectURL(url), 60000);
+      mostrarStatusPDF('PDF aberto numa nova aba. Toque no ícone de compartilhar do navegador pra enviar.', 'ok');
+    } else {
+      // navegador bloqueou a aba mesmo assim (raro, configuração restritiva do usuário)
+      doc.save(NOME_ARQUIVO_PDF);
+      mostrarStatusPDF('Não consegui abrir a aba — o PDF foi baixado no lugar.', 'err');
+    }
   } catch(err){
     mostrarStatusPDF('Não foi possível gerar o PDF: ' + err.message, 'err');
     console.error(err);
-  } finally {
-    btn.disabled = false; btn.textContent = original;
   }
 }
 
+// Botão "Enviar por WhatsApp": chama a folha nativa de compartilhamento direto
+// dentro do clique (sem nenhum "await" antes), porque o Safari exige isso pra
+// não bloquear por segurança. Se o navegador não suportar, baixa o PDF normalmente
+// e avisa que precisa anexar à mão.
 async function enviarWhatsApp(btn){
   const original = btn.textContent;
 
@@ -1602,17 +1768,38 @@ async function enviarWhatsApp(btn){
     mostrarStatusPDF('As bibliotecas de PDF ainda não carregaram. Verifique sua internet e tente de novo em alguns segundos.', 'err');
     return;
   }
+  if(location.protocol !== 'https:'){
+    mostrarStatusPDF('Esse site ainda não está em conexão segura (https). O compartilhamento direto só libera depois que o certificado SSL do domínio for ativado.', 'err');
+    return;
+  }
 
   btn.disabled = true; btn.textContent = 'Gerando...';
   try{
     const doc = construirPDF();
-    const compartilhou = await tentarCompartilhar(doc, 'Simulação da eleição 2026 pro Piauí — dá uma olhada!');
-    if(!compartilhou){
-      // Navegador sem suporte a compartilhar arquivos (comum em desktop):
-      // abre o PDF normalmente e explica o próximo passo.
-      abrirOuBaixar(doc);
-      mostrarStatusPDF('Esse navegador não abre o compartilhamento direto pro WhatsApp. O PDF foi aberto/baixado — anexe ele manualmente na conversa.', 'err');
+
+    if(navigator.share){
+      try{
+        const blob = doc.output('blob');
+        const arquivo = new File([blob], NOME_ARQUIVO_PDF, {type:'application/pdf'});
+        await navigator.share({
+          files:[arquivo],
+          title:'Simulação Lupa1 Eleição 2026',
+          text:'Simulação da eleição 2026 pro Piauí — dá uma olhada!'
+        });
+        btn.disabled = false; btn.textContent = original;
+        return; // compartilhado com sucesso
+      }catch(err){
+        if(err && err.name === 'AbortError'){
+          // usuário cancelou na própria folha de compartilhamento — não é erro
+          btn.disabled = false; btn.textContent = original;
+          return;
+        }
+        // navegador tentou mas não conseguiu compartilhar o arquivo: cai no download
+      }
     }
+
+    doc.save(NOME_ARQUIVO_PDF);
+    mostrarStatusPDF('Esse navegador não abriu o compartilhamento direto. O PDF foi baixado — anexe ele manualmente no WhatsApp.', 'err');
   } catch(err){
     mostrarStatusPDF('Não foi possível gerar o PDF: ' + err.message, 'err');
     console.error(err);
@@ -1621,8 +1808,9 @@ async function enviarWhatsApp(btn){
   }
 }
 
-document.getElementById('btnPdf').addEventListener('click', (e)=>gerarPDF(e.currentTarget));
-document.getElementById('btnPdfBottom').addEventListener('click', (e)=>gerarPDF(e.currentTarget));
+document.getElementById('btnPdf').addEventListener('click', (e)=>abrirPDF(e.currentTarget));
+document.getElementById('btnPdfBottom').addEventListener('click', (e)=>abrirPDF(e.currentTarget));
+document.getElementById('btnWhats').addEventListener('click', (e)=>enviarWhatsApp(e.currentTarget));
 document.getElementById('btnWhatsBottom').addEventListener('click', (e)=>enviarWhatsApp(e.currentTarget));
 </script>
 </body>
