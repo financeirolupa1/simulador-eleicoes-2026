@@ -741,6 +741,11 @@
           <label>Piso individual (10% do QE)</label>
           <div class="val" id="statPiso">0</div>
         </div>
+        <div class="stat-card">
+          <label>Piso de partido p/ sobra (80% do QE)</label>
+          <div class="val" id="statQE80">0</div>
+          <div class="hint">Só disputa a 1ª rodada de sobras o bloco que passar desse valor.</div>
+        </div>
         <div class="stat-card editable">
           <label>Vagas em disputa</label>
           <input type="number" id="inputVagas" value="10" min="1" max="99">
@@ -797,7 +802,7 @@
         </div>
         <div class="saldo-row">
           <input type="number" id="inputOutros" value="0" min="0">
-          <div class="saldo-hint">Saldo que falta para bater o total estimado de votos válidos do estado. Cai sozinho conforme você preenche a votação acima. Se editar à mão, o automático desliga.</div>
+          <div class="saldo-hint">Saldo que falta para bater o total estimado de votos válidos do estado. Cai sozinho conforme você preenche a votação acima. Se editar à mão, o automático desliga. <b>Esse número sempre inclui todos os demais partidos que não estão mapeados aqui</b> — PDT, PSDB, PL, Avante, Podemos e qualquer outra legenda que tenha candidato no Piauí.</div>
         </div>
         <div class="saldo-bar"><div class="saldo-fill" id="saldoFill"></div></div>
         <div class="saldo-legend" id="saldoLegend"></div>
@@ -915,64 +920,60 @@ const CANDIDATES = [
   {name:"Florentino Neto", party:"PT"},
   {name:"Franzé Silva", party:"PT"},
   {name:"Merlong Solano", party:"PT"},
-  {name:"Coronel Elizete Lima", party:"PT"},
+  {name:"Cel. Elizete", party:"PT"},
   {name:"Raissa Protetora", party:"PT"},
   {name:"Zenaide Lustosa", party:"PT"},
-  {name:"Georgiano Neto", party:"PSD"},
+  {name:"Georgiano", party:"PSD"},
   {name:"Wilson Martins", party:"PSD"},
-  {name:"Silvio César", party:"PSD"},
-  {name:"Lar do Nando", party:"PSD"},
-  {name:"Etiniel Anchieta", party:"PSD"},
+  {name:"Sílvio Brito", party:"PSD"},
+  {name:"Nando do Lar do Nando", party:"PSD"},
+  {name:"Sargento Etniel Anchieta", party:"PSD"},
   {name:"Hilder Monção", party:"PSD"},
-  {name:"Najra Nunes", party:"PSD"},
+  {name:"Coronel Najra", party:"PSD"},
   {name:"Neuma Café", party:"PSD"},
-  {name:"Deusimar Tererê", party:"PSD"},
-  {name:"Lívia Oliveira", party:"PSD"},
+  {name:"Deusimar \"O Tererê\"", party:"PSD"},
+  {name:"Livia Oliveira", party:"PSD"},
   {name:"Laura Nascimento", party:"PSD"},
-  {name:"Aline Teixeira", party:"PMDB"},
-  {name:"Castro Neto", party:"PMDB"},
-  {name:"Delegada Anamelka", party:"PMDB"},
-  {name:"Dr. Ribamar Bandeira", party:"PMDB"},
-  {name:"Enfermeiro Antônio Neto", party:"PMDB"},
-  {name:"Irmão Zé Luis", party:"PMDB"},
-  {name:"Marcos Aurélio Sampaio", party:"PMDB"},
-  {name:"Rômulo Augusto", party:"PMDB"},
-  {name:"Sarah Menezes", party:"PMDB"},
-  {name:"Sarvia", party:"PMDB"},
-  {name:"Venâncio", party:"PMDB"},
-  {name:"Átila", party:"PP"},
-  {name:"Júlio Arcoverde", party:"PP"},
-  {name:"Zé Hamilton", party:"PP"},
-  {name:"Antônio \"Cachorro\"", party:"PP"},
-  {name:"Gisele Soares", party:"PP"},
-  {name:"Emanuel Paiva", party:"PP"},
-  {name:"Débora Carvalho", party:"PP"},
-  {name:"Gil Paraibano", party:"PP"},
-  {name:"Samantha Cavalca", party:"PP"},
+  {name:"Aline Teixeira", party:"MDB"},
+  {name:"Castro Neto", party:"MDB"},
+  {name:"Delegada Anamelka", party:"MDB"},
+  {name:"Dr. Ribamar Bandeira", party:"MDB"},
+  {name:"Enfermeiro Antonio Neto", party:"MDB"},
+  {name:"Irmão Zé Luis", party:"MDB"},
+  {name:"Marcos Aurélio Sampaio", party:"MDB"},
+  {name:"Rômulo Augusto", party:"MDB"},
+  {name:"Sarah Menezes", party:"MDB"},
+  {name:"Sarvia", party:"MDB"},
+  {name:"Venâncio", party:"MDB"},
+  {name:"Átila Lira", party:"Federação União Progressista"},
+  {name:"Júlio Arcoverde", party:"Federação União Progressista"},
+  {name:"Antônio Cachorro", party:"Federação União Progressista"},
+  {name:"Emanuel Paiva", party:"Federação União Progressista"},
+  {name:"Gil Paraibano", party:"Federação União Progressista"},
+  {name:"Samantha Cavalca", party:"Federação União Progressista"},
+  {name:"Dedé Aldenice", party:"Federação União Progressista"},
+  {name:"Enfermeira Vânia Carvalho", party:"Federação União Progressista"},
+  {name:"Geraldin", party:"Federação União Progressista"},
+  {name:"Gyselle Cajuína", party:"Federação União Progressista"},
+  {name:"Jotinha", party:"Federação União Progressista"},
   {name:"Jadyel Alencar", party:"Republicanos"},
-  {name:"Capitão Fábio Abreu", party:"Republicanos"},
-  {name:"Ana Fidélis", party:"Republicanos"},
-  {name:"Fabrício Loiola", party:"Republicanos"},
+  {name:"Capitão Fabio Abreu", party:"Republicanos"},
+  {name:"Ana Fidelis", party:"Republicanos"},
+  {name:"Fabricio Loiola", party:"Republicanos"},
   {name:"Pastora Diana Carvalho", party:"Republicanos"},
   {name:"Magno Soares", party:"Republicanos"},
-  {name:"Elisvânia Rodrigues", party:"Republicanos"},
+  {name:"Doutora Elisvania Rodrigues", party:"Republicanos"},
   {name:"Alan Osório", party:"Republicanos"},
-  {name:"Leônidas Quaresma", party:"Republicanos"},
-  {name:"Ana Lina Neres", party:"PDT"},
-  {name:"Artênio do Axé", party:"PDT"},
-  {name:"Júlio Leite", party:"PDT"},
-  {name:"Mara", party:"PDT"},
-  {name:"Márcia Araújo", party:"PDT"},
-  {name:"Socorro da Madre Tereza", party:"PDT"},
-  {name:"Vaguim", party:"PDT"},
+  {name:"Prof Leonidas Quaresma", party:"Republicanos"},
+  {name:"Tomaz Teixeira", party:"Republicanos"},
   {name:"Carmelita Castro", party:"Verde"},
-  {name:"Delegado Charles Pessoa", party:"Verde"}
+  {name:"Delegado Charles", party:"Verde"}
 ];
 
 /* Coligações: partidos que disputam juntos e somam votos como um único bloco
    para efeito de quociente partidário e distribuição de vagas. */
 const COLIGACOES = {
-  "PT / Verde": ["PT", "Verde"]
+  "Federação Brasil da Esperança": ["PT", "Verde"]
 };
 
 function blocoDe(partido){
@@ -984,11 +985,11 @@ function blocoDe(partido){
 CANDIDATES.forEach(c=>{ c.bloco = blocoDe(c.party); });
 
 const PARTY_COLORS = {
-  "PT / Verde":"#E2453C",
+  "Federação Brasil da Esperança":"#E2453C",
   "PT":"#E2453C",
   "PSD":"#F2A93C",
-  "PMDB":"#A8C444",
-  "PP":"#5B8DEF",
+  "MDB":"#A8C444",
+  "Federação União Progressista":"#5B8DEF",
   "Republicanos":"#17A398",
   "PDT":"#C23B7B",
   "Verde":"#2E8B57"
@@ -1359,6 +1360,7 @@ function recalc(){
   document.getElementById('statTotalVotos').textContent = fmt(r.totalValido);
   document.getElementById('statQE').textContent = fmt(r.QE);
   document.getElementById('statPiso').textContent = fmt(r.piso);
+  document.getElementById('statQE80').textContent = fmt(r.QE * 0.8);
 
   // party totals in accordion headers
   PARTIES.forEach(p=>{
