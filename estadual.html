@@ -741,6 +741,11 @@
           <label>Piso individual (10% do QE)</label>
           <div class="val" id="statPiso">0</div>
         </div>
+        <div class="stat-card">
+          <label>Piso de partido p/ sobra (80% do QE)</label>
+          <div class="val" id="statQE80">0</div>
+          <div class="hint">Só disputa a 1ª rodada de sobras o bloco que passar desse valor.</div>
+        </div>
         <div class="stat-card editable">
           <label>Vagas em disputa</label>
           <input type="number" id="inputVagas" value="30" min="1" max="99">
@@ -1055,7 +1060,7 @@ const state = {
   votes: Object.fromEntries(CANDIDATES.map(c=>[c.id,0])),
   legenda: Object.fromEntries(PARTIES.map(p=>[p,0])),
   restante: Object.fromEntries(PARTIES.map(p=>[p,0])),
-  vagas: 10,
+  vagas: Number(document.getElementById('inputVagas').value) || 30,
   outros: 0
 };
 
@@ -1410,6 +1415,7 @@ function recalc(){
   document.getElementById('statTotalVotos').textContent = fmt(r.totalValido);
   document.getElementById('statQE').textContent = fmt(r.QE);
   document.getElementById('statPiso').textContent = fmt(r.piso);
+  document.getElementById('statQE80').textContent = fmt(r.QE * 0.8);
 
   // party totals in accordion headers
   PARTIES.forEach(p=>{
