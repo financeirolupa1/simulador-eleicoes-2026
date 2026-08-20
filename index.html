@@ -51,7 +51,7 @@
 
   /* ===== Marca ===== */
   .brand{display:flex;align-items:center;gap:16px;margin-bottom:26px;}
-  .brand svg{width:clamp(58px,10vw,78px);height:clamp(58px,10vw,78px);flex:none;}
+  .brand-icon{width:clamp(58px,10vw,78px);height:clamp(58px,10vw,78px);flex:none;object-fit:contain;}
   .brand-word{
     font-family:'Oswald',sans-serif;font-weight:700;
     font-size:clamp(38px,7vw,60px);line-height:1;letter-spacing:-.01em;
@@ -167,14 +167,7 @@
   <div class="wrap">
 
     <div class="brand">
-      <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-label="Lupa1">
-        <circle cx="36" cy="26" r="20" fill="#29569F"/>
-        <path d="M36 10 A16 16 0 0 1 50 34 L36 26 Z" fill="#49AD4A"/>
-        <path d="M36 42 A16 16 0 0 1 22 18 L36 26 Z" fill="#49AD4A"/>
-        <path d="M50 34 A16 16 0 0 1 22 18" fill="#49AD4A"/>
-        <text x="36" y="34" font-family="Oswald, sans-serif" font-size="22" font-weight="700" fill="#fff" text-anchor="middle">1</text>
-        <rect x="14" y="40" width="7" height="18" rx="3.5" transform="rotate(45 17.5 49)" fill="#29569F"/>
-      </svg>
+      <img src="lupa1-icon.png" alt="Lupa1" class="brand-icon">
       <div class="brand-word">Lupa<b>1</b></div>
     </div>
 
@@ -221,15 +214,14 @@
     </div>
 
     <p class="note">
-      Ferramenta de simulação hipotética, sem vínculo com dados oficiais de votação.
-      Os números inseridos são estimativas de quem usa. O cálculo segue as regras do sistema
-      proporcional brasileiro previstas no Código Eleitoral.
+      OBS: Simulação hipotética, sem vínculo com dados oficiais da Justiça Eleitoral.
+      Pode conter erros — use apenas como referência.
     </p>
 
   </div>
 
   <footer>
-    <span>Grupo Lupa1 &middot; Comunicação</span>
+    <span>Uma ferramenta exclusiva <b style="color:var(--ink);letter-spacing:.5px;">GRUPO LUPA1</b></span>
     <span class="sep">&middot;</span>
     <div class="hit-counter" id="hitCounter" hidden>
       <span class="hit-dot"></span>
